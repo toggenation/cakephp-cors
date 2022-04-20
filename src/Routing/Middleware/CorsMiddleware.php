@@ -1,4 +1,5 @@
 <?php
+
 namespace Cors\Routing\Middleware;
 
 use Cake\Core\Configure;
@@ -18,22 +19,28 @@ class CorsMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if (strtoupper($request->getMethod()) === 'OPTIONS') {
-            if (!array_intersect($request->getHeader("Access-Control-Request-Method"), Configure::read('Cors.AllowMethods'))) {
-                $response =  new Response([
-                    'status' => 403,
-                    'body' => 'Method Forbidden'
-                ]);
-            } else {
-                $response =  new Response([
-                    'status' => 200
-                ]);
-            }
+            $response = $this->_response($request);
         } else {
             $response = $handler->handle($request);
         }
 
         $response = $this->addHeaders($request, $response);
 
+        return $response;
+    }
+
+    protected function _response(ServerRequestInterface $request): Response
+    {
+        if (!array_intersect($request->getHeader("Access-Control-Request-Method"), Configure::read('Cors.AllowMethods'))) {
+            $response =  new Response([
+                'status' => 403,
+                'body' => 'Method Forbidden'
+            ]);
+        } else {
+            $response =  new Response([
+                'status' => 200
+            ]);
+        }
         return $response;
     }
 
@@ -51,7 +58,6 @@ class CorsMiddleware implements MiddlewareInterface
                     ->withHeader('Access-Control-Allow-Headers', $this->_allowHeaders($request))
                     ->withHeader('Access-Control-Allow-Methods', $this->_allowMethods());
             }
-
         }
 
         return $response;
@@ -62,7 +68,7 @@ class CorsMiddleware implements MiddlewareInterface
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @return array|string
      */
-    private function _allowOrigin(ServerRequestInterface $request)
+    protected function _allowOrigin(ServerRequestInterface $request)
     {
         $allowOrigin = Configure::read('Cors.AllowOrigin');
         $origin = $request->getHeader('Origin');
@@ -89,7 +95,7 @@ class CorsMiddleware implements MiddlewareInterface
     /**
      * @return String
      */
-    private function _allowCredentials(): String
+    protected function _allowCredentials(): String
     {
         return (Configure::read('Cors.AllowCredentials')) ? 'true' : 'false';
     }
@@ -97,7 +103,7 @@ class CorsMiddleware implements MiddlewareInterface
     /**
      * @return String
      */
-    private function _allowMethods(): String
+    protected function _allowMethods(): String
     {
         return implode(', ', (array) Configure::read('Cors.AllowMethods'));
     }
@@ -106,7 +112,7 @@ class CorsMiddleware implements MiddlewareInterface
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @return String
      */
-    private function _allowHeaders(ServerRequestInterface $request): String
+    protected function _allowHeaders(ServerRequestInterface $request): String
     {
         $allowHeaders = Configure::read('Cors.AllowHeaders');
 
@@ -120,7 +126,7 @@ class CorsMiddleware implements MiddlewareInterface
     /**
      * @return String
      */
-    private function _exposeHeaders(): String
+    protected function _exposeHeaders(): String
     {
         $exposeHeaders = Configure::read('Cors.ExposeHeaders');
 
@@ -134,7 +140,7 @@ class CorsMiddleware implements MiddlewareInterface
     /**
      * @return String
      */
-    private function _maxAge(): String
+    protected function _maxAge(): String
     {
         $maxAge = (string) Configure::read('Cors.MaxAge');
 
