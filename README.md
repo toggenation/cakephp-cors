@@ -23,6 +23,26 @@ The recommended way to install composer packages is:
 composer require ozee31/cakephp-cors
 ```
 
+## Using this repo with composer instead of the `ozee31/cakephp-cors` one
+
+```
+  # add to composer.json
+ "require": {
+        "... other struff here...",
+        "ozee31/cakephp-cors": "dev-master"
+    },
+  "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/toggenation/cakephp-cors"
+        }
+    ]
+    
+  # run composer update
+  composer update
+```
+
+
 ## Quick Start
 
 Loading the Plugin
