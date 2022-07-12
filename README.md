@@ -71,7 +71,10 @@ By default the plugin authorize cors for all origins, all methods and all header
     'AllowHeaders' => true, // accept all headers
     'ExposeHeaders' => false, // don't accept personal headers
     'MaxAge' => 86400, // cache for 1 day
-    'exceptionRenderer' => 'Cors\Error\AppExceptionRenderer', // Use ExeptionRenderer class of plugin
+    // 'exceptionRenderer' => 'Cors\Error\AppExceptionRenderer', // Use ExeptionRenderer class of plugin
+    // use the Cors Exception renderer but extend from the newer 
+    // non-deprecated renderers
+    'baseExceptionRenderer' => 'Cake\Error\Renderer\WebExceptionRenderer'
 ```
 
 ### Change config
