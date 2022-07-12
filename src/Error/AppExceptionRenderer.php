@@ -6,7 +6,7 @@ use Cake\Controller\Controller;
 use Cors\Routing\Middleware\CorsMiddleware;
 
 function get_dynamic_parent() {
-    return Configure::read('Error.baseExceptionRenderer');// return what you need
+    return Configure::read('Cors.baseExceptionRenderer');// return what you need
 }
 class_alias(get_dynamic_parent(), 'Cors\Error\BaseExceptionRenderer');
 
