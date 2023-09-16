@@ -21,9 +21,11 @@ class AppExceptionRenderer extends BaseExceptionRenderer
     {
         $controller = parent::_getController();
         $cors = new CorsMiddleware();
-        $controller->response = $cors->addHeaders(
+        $controller->setResponse(
+            $cors->addHeaders(
             $controller->getRequest(),
             $controller->getResponse()
+            )
         );
         return $controller;
     }
